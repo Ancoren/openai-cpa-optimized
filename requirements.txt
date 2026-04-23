@@ -1,0 +1,38 @@
+# Web framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+websockets>=12.0
+
+# Data validation & settings
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+
+# Database
+sqlalchemy>=2.0.0
+pymysql>=1.1.0
+cryptography>=42.0.0
+
+# HTTP client
+httpx[socks]>=0.27.0
+curl-cffi>=0.6.0
+requests>=2.31.0
+
+# Config & parsing
+pyyaml>=6.0.1
+
+# Logging
+loguru>=0.7.0
+
+# Cloud integrations
+cloudflare>=2.19.0
+
+# Google OAuth
+google-api-python-client>=2.120.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0
+
+# Docker management
+docker>=7.0.0
+
+# Utilities
+python-socks>=2.4.0
