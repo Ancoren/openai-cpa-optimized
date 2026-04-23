@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  codex-web:
+    image: python:3.11-slim
+    container_name: codex_manager
+    working_dir: /app
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: always
+    environment:
+      - APP_LOG_LEVEL=INFO
+      - DB_TYPE=sqlite
+      - APP_WEB_PASSWORD=${WEB_PASSWORD:-admin}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./:/app
+      - ./data:/app/data
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt && python main.py"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
