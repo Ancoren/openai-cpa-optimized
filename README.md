@@ -100,40 +100,33 @@ This is a refactored and optimized version of the [wenfxl/openai-cpa](https://gi
 
 ```bash
 # 1. Clone and enter
+git clone https://github.com/Ancoren/openai-cpa-optimized.git
 cd openai-cpa-optimized
 
-# 2. Copy legacy components from original project
-cp -r /path/to/original/utils/email_providers utils/
-cp /path/to/original/utils/auth_core*.so services/   # or .pyd on Windows
-
-# 3. Configure
+# 2. Configure
 cp config.example.yaml data/config.yaml
 # Edit data/config.yaml with your settings
 
-# 4. Run locally
+# 3. Run locally
 pip install -r requirements.txt
 python main.py
 
-# 5. Or use Docker
+# 4. Or use Docker
 docker-compose up -d
 ```
 
 Web console: http://127.0.0.1:8000  
 Default password: `admin` (change via `APP_WEB_PASSWORD`)
 
-### Migration from original project
+### Built-in Legacy Components
 
-The original `auth_core` is a compiled extension (`.so` / `.pyd`). You must copy it:
-- Linux x86_64: `auth_core.cpython-311-x86_64-linux-gnu.so`
-- Linux aarch64: `auth_core.cpython-311-aarch64-linux-gnu.so`
-- macOS: `auth_core.cpython-311-darwin.so`
-- Windows: `auth_core.pyd`
+The following original components are **already included** in this repository:
 
-Place it next to `services/openai_register.py` or anywhere in `PYTHONPATH`.
+- **`utils/email_providers/`** — All 10+ email backends (mail_service, luckmail, duckmail, tempmail, etc.)
+- **`utils/integrations/`** — AI service, HeroSMS, Clash manager, Sub2API client, TG notifier
+- **`utils/auth_core*.so`** — Compiled Sentinel challenge extension (Linux x86_64, aarch64, macOS)
 
-The original `utils/email_providers/` directory should also be copied to `utils/email_providers/`.
-
-The compatibility adapter (`services/email_adapter.py`) will automatically bridge them.
+No manual copying needed. The compatibility adapter (`services/email_adapter.py`) bridges them automatically.
 
 ## 🔧 Environment Variables
 
