@@ -141,7 +141,51 @@ No manual copying needed. The compatibility adapter (`services/email_adapter.py`
 | `DB_PASS` | MySQL password | `` |
 | `DB_NAME` | MySQL database | `wenfxl_manager` |
 
-## 📊 Performance Improvements
+## 🚀 Auto-Push to Codex Hub
+
+Newly registered accounts can be **automatically pushed** to [Codex Hub](https://github.com/Ancoren/codex-hub) in real-time.
+
+### Configuration
+
+Add to `data/config.yaml` (or use env vars):
+
+```yaml
+hub:
+  enable: true
+  url: "http://127.0.0.1:8080"      # Codex Hub address
+  admin_password: "your-hub-admin"   # Hub admin password
+  api_key: ""                        # Hub gateway API key (optional)
+  auto_push_on_reg: true             # Push immediately after registration
+  retry_times: 3
+  retry_delay: 5
+```
+
+Or via environment variables:
+
+```bash
+APP_HUB__ENABLE=true
+APP_HUB__URL=http://127.0.0.1:8080
+APP_HUB__ADMIN_PASSWORD=your-hub-admin
+```
+
+### How It Works
+
+1. Registration worker completes OAuth → gets `access_token` + `refresh_token`
+2. `db.save_account()` saves to local SQLite
+3. **Fire-and-forget** background thread enqueues the account to Hub
+4. Hub Pusher logs in, obtains admin token, and `POST /admin/accounts`
+5. If Hub is down or push fails, it retries silently — **never blocks registration**
+
+### Manual Import (Fallback)
+
+If auto-push is disabled or you have historical accounts, use Codex Hub's `/admin/import/sqlite` endpoint:
+
+```bash
+curl -X POST http://localhost:8080/admin/import/sqlite \
+  -H "Authorization: Bearer YOUR_HUB_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"db_path": "/path/to/cpa/data/data.db", "skip_reg_only": true}'
+```
 
 | Metric | Before | After |
 |---|---|---|
