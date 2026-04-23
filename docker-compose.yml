@@ -2,36 +2,26 @@ version: '3.8'
 
 services:
   codex-web:
-    build: .
+    image: python:3.11-slim
     container_name: codex_manager
+    working_dir: /app
     ports:
-      - "8000:8000"
-    restart: unless-stopped
+      - "127.0.0.1:8000:8000"
+    restart: always
     environment:
       - APP_LOG_LEVEL=INFO
       - DB_TYPE=sqlite
       - APP_WEB_PASSWORD=${WEB_PASSWORD:-admin}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
     volumes:
+      - ./:/app
       - ./data:/app/data
+    command: >
+      bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/* && pip install --no-cache-dir -r requirements.txt && python main.py"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
-    # Security: do NOT mount docker.sock unless absolutely necessary
-    # If proxy pool mode is needed, use a separate sidecar pattern
-
-  # Optional: MySQL backend
-  # db:
-  #   image: mysql:8.0
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: changeme
-  #     MYSQL_DATABASE: wenfxl_manager
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-
-# volumes:
-#   mysql_data:
+      start_period: 20s
