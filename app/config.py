@@ -133,6 +133,18 @@ class ClusterConfig(BaseSettings):
     secret: str = "wenfxl666"
 
 
+class HubConfig(BaseSettings):
+    """Codex Hub auto-push configuration."""
+
+    enable: bool = False
+    url: str = "http://127.0.0.1:8080"
+    admin_password: str = ""
+    api_key: str = ""
+    auto_push_on_reg: bool = True
+    retry_times: int = 3
+    retry_delay: int = 5
+
+
 class AppConfig(BaseSettings):
     """
     Centralized application configuration.
@@ -174,6 +186,7 @@ class AppConfig(BaseSettings):
     email: EmailConfig = Field(default_factory=EmailConfig)
     tg: TGConfig = Field(default_factory=TGConfig)
     cluster: ClusterConfig = Field(default_factory=ClusterConfig)
+    hub: HubConfig = Field(default_factory=HubConfig)
 
     @field_validator("login_delay_max")
     @classmethod

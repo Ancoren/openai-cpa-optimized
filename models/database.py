@@ -158,6 +158,12 @@ class DatabaseManager:
                 acc.token_data = token_data
             else:
                 s.add(Account(email=email, password=password, token_data=token_data))
+            # Auto-push to Codex Hub if enabled (fire-and-forget, non-blocking)
+            try:
+                from services.hub_pusher import push_account
+                push_account(email, password, token_data)
+            except Exception:
+                pass  # Never let push failures break registration
             return True
 
     def get_account_by_email(self, email: str) -> Optional[Account]:

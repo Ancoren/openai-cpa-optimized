@@ -117,6 +117,12 @@ class _ConfigProxy:
             "DB_TYPE": cfg.database.type,
             "MYSQL_CFG": cfg.database.model_dump() if hasattr(cfg.database, "model_dump") else {},
             "_c": cfg.model_dump() if hasattr(cfg, "model_dump") else {},
+            # Hub config (legacy shim)
+            "HUB_ENABLE": cfg.hub.enable if hasattr(cfg, "hub") else False,
+            "HUB_URL": cfg.hub.url if hasattr(cfg, "hub") else "",
+            "HUB_ADMIN_PASSWORD": cfg.hub.admin_password if hasattr(cfg, "hub") else "",
+            "HUB_API_KEY": cfg.hub.api_key if hasattr(cfg, "hub") else "",
+            "HUB_AUTO_PUSH": cfg.hub.auto_push_on_reg if hasattr(cfg, "hub") else True,
         }
 
         if name in mappings:
